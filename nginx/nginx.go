@@ -2,6 +2,6 @@ package nginx
 
 import "fmt"
 
-func PrintHello() {
-	fmt.Println("Hello, Modules! This is nginx speaking!")
+func PrintNginxPkg() {
+	fmt.Println("Hello, Modules! This is Nginx package speaking v1.0.0!")
 }

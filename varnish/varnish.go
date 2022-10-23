@@ -2,6 +2,6 @@ package varnish
 
 import "fmt"
 
-func PrintHello() {
-	fmt.Println("Hello, Modules! This is varnish speaking!")
+func PrintVarnishPkg() {
+	fmt.Println("Hello, Modules! This is package varnish speaking v1.0.0!")
 }

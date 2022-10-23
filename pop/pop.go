@@ -2,6 +2,6 @@ package pop
 
 import "fmt"
 
-func PrintHello() {
-	fmt.Println("Hello, Modules! This is pop speaking!")
+func PrintPopPkg() {
+	fmt.Println("Hello, Modules! This is Pop package speaking v1.0.0!")
 }
