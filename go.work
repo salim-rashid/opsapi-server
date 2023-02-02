@@ -2,5 +2,6 @@ go 1.19
 
 use (
 	.
-	./web_server
+	./homepage
+	./webserver
 )

@@ -1,27 +1,29 @@
 package main
 
 import (
+	"homepage"
 	"log"
-	"net/http"
-	"web_server"
-	// "opsapi/nginx"
+	"opsapi-server/nginx"
+	"opsapi-server/varnish"
+	"webserver"
 )
 
 func main() {
+	// Calling homepage
+	homepage.HomePageConf()
 
-	http.HandleFunc("/", web_server.HomePage)
+	// Calling Nginx configuration.
+	nginx.NginxConf()
 
-	http.HandleFunc("/v1/nginx_install", web_server.NginxInstall)
+	// Calling Varnish configuration.
+	varnish.VarnishConf()
 
-	http.HandleFunc("/v1/nginx_uninstall", web_server.NginxUninstall)
+	// Calling Openrest configuration.
+	// openresty.OpenRestyConf()
 
-	http.HandleFunc("/v1/nginx_update", web_server.NginxUpdate)
-
-	http.HandleFunc("/v1/nginx_start", web_server.NginxStart)
-
-	errs := web_server.Run(":8080", ":10443", map[string]string{
-		"cert": "./web_server/localhost.crt",
-		"key":  "./web_server/localhost.key",
+	errs := webserver.Run(":8080", ":10443", map[string]string{
+		"cert": "./webserver/localhost.crt",
+		"key":  "./webserver/localhost.key",
 	})
 
 	// This will run forever until channel receives error
