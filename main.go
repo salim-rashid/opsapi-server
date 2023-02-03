@@ -3,6 +3,7 @@ package main
 import (
 	"homepage"
 	"log"
+	"openresty"
 	"opsapi-server/nginx"
 	"opsapi-server/varnish"
 	"webserver"
@@ -19,7 +20,7 @@ func main() {
 	varnish.VarnishConf()
 
 	// Calling Openrest configuration.
-	// openresty.OpenRestyConf()
+	openresty.OpenrestyConf()
 
 	errs := webserver.Run(":8080", ":10443", map[string]string{
 		"cert": "./webserver/localhost.crt",
