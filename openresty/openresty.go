@@ -29,7 +29,8 @@ func OpenrestyInstall(w http.ResponseWriter, r *http.Request) {
 	case "linux":
 		fmt.Println("Linux")
 	default:
-		fmt.Printf("%s.\n", os)
+		// fmt.Printf("%s.\n", os)
+		fmt.Printf("The operating system is not supported!")
 	}
 
 	// Detect Linux distribution
