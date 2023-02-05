@@ -10,7 +10,9 @@ import (
 )
 
 func main() {
-	// Calling homepage
+	// Call OS detection configuration
+	// Detectos()
+	// Calling homepage configuration
 	homepage.HomePageConf()
 
 	// Calling Nginx configuration.
