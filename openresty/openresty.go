@@ -7,6 +7,8 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"os/exec"
+	"encoding/json"
 )
 
 func OpenrestyConf() {
@@ -70,7 +72,14 @@ func DetectLinuxDist() {
 func InstallOpenresty(distro string) {
 	switch distro {
 	case "Ubuntu":
-		fmt.Printf("Install Openresty on %v.", distro)
+		//fmt.Printf("Install Openresty on %v.\n", distro)
+		deployOpenresty()
+		installStatus()
+                //out, err := exec.Command("bash", "-c", "./install_openresty.sh").Output()
+                //if err != nil {
+                //   fmt.Printf("%s", err)
+                //}
+                //fmt.Printf("%s", out)
 	case "CentOS":
 		fmt.Printf("Install Openresty on %v.", distro)
 	case "Amazon Linux":
@@ -78,6 +87,69 @@ func InstallOpenresty(distro string) {
 	default:
 		fmt.Println("The operating system is not supported!.")
 	}
+}
+
+func deployOpenresty() {
+
+   //output, err := exec.Command("openresty", "-v").CombinedOutput()
+   _, err := exec.Command("openresty", "-v").CombinedOutput()
+   if err != nil {
+      fmt.Println("OpenResty is not installed")
+      fmt.Println("The installation will now begin ..........")
+      //return
+      //out, err := exec.Command("bash", "-c", "./openresty/install_openresty.sh").Output()
+      _, err := exec.Command("bash", "-c", "./openresty/install_openresty.sh").Output()
+      if err != nil {
+        fmt.Printf("%s", err)
+      }
+
+      //fmt.Printf("%s", out)
+      return
+   }else {
+      fmt.Printf("Openresty is already installed.\n")
+   }
+
+   //out, err := exec.Command("bash", "-c", "./openresty/install_openresty.sh").Output()
+
+   //if err != nil {
+   //   fmt.Printf("%s", err)
+   //}
+
+   //fmt.Printf("%s", out)
+   ////return
+
+}
+
+
+type Application struct {
+	Name    string `json:"name"`
+	Version string `json:"version"`
+}
+
+func installStatus() {
+	output, err := exec.Command("openresty", "-v").CombinedOutput()
+	if err != nil {
+		fmt.Println("OpenResty is not installed")
+		return
+	}
+
+        versionOutput := strings.Split(string(output), " ")
+        version := strings.TrimSpace(versionOutput[2])
+        custom_versionOutput := strings.Split(string(version), "/")
+        custom_version := strings.TrimSpace(custom_versionOutput[1])
+
+	app := Application{
+		Name:    "OpenResty",
+		Version: custom_version,
+	}
+
+	appJSON, err := json.Marshal(app)
+	if err != nil {
+		fmt.Println("Error marshaling JSON:", err)
+		return
+	}
+	
+	fmt.Println(string(appJSON))
 }
 
 // func OpenrestyUninstall(w http.ResponseWriter, r *http.Request) {
