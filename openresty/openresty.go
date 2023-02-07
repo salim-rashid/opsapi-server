@@ -74,7 +74,8 @@ func InstallOpenresty(distro string) {
 	case "Ubuntu":
 		//fmt.Printf("Install Openresty on %v.\n", distro)
 		deployOpenresty()
-		installStatus()
+	        installStatus()	
+	        //http.HandleFunc("/v1/openresty_install_status", installStatus())
                 //out, err := exec.Command("bash", "-c", "./install_openresty.sh").Output()
                 //if err != nil {
                 //   fmt.Printf("%s", err)
@@ -104,10 +105,9 @@ func deployOpenresty() {
       }
 
       //fmt.Printf("%s", out)
-      return
-   }else {
-      fmt.Printf("Openresty is already installed.\n")
-   }
+   }//else {
+   //   fmt.Printf("Openresty is already installed.\n")
+   //}
 
    //out, err := exec.Command("bash", "-c", "./openresty/install_openresty.sh").Output()
 
@@ -125,6 +125,15 @@ type Application struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
 }
+
+// func OpenrestyUninstall(w http.ResponseWriter, r *http.Request) {
+//      fmt.Fprintf(w, "Do Openresty uninstallation.")
+// }
+
+
+
+
+
 
 func installStatus() {
 	output, err := exec.Command("openresty", "-v").CombinedOutput()
@@ -149,7 +158,8 @@ func installStatus() {
 		return
 	}
 	
-	fmt.Println(string(appJSON))
+	//fmt.Println(string(appJSON))
+	fmt.Printf(string(appJSON))
 }
 
 // func OpenrestyUninstall(w http.ResponseWriter, r *http.Request) {
