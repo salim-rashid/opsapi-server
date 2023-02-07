@@ -1,69 +1,32 @@
 package main
 
 import (
-	"fmt"
+	"homepage"
 	"log"
-	"net/http"
-	"opsapi/filemanager"
-	"opsapi/nginx"
-	"opsapi/pop"
-	"opsapi/varnish"
+	"openresty"
+	"opsapi-server/nginx"
+	"opsapi-server/varnish"
+	"webserver"
 )
 
-func test() {
-
-	fmt.Println("Hello, Modules OPSAPI filemanager package!")
-
-	filemanager.PrintFileManager()
-
-	nginx.PrintNginxPkg()
-
-	varnish.PrintVarnishPkg()
-
-	pop.PrintPopPkg()
-}
-
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Welcome to the Edgeone API Server - https://edgeone.cloud/api")
-}
-
-func generateCerts() {
-	// generate a self-signed certificate
-	//cert, _ := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
-}
-
-func Run(addr string, sslAddr string, ssl map[string]string) chan error {
-
-	errs := make(chan error)
-
-	// Starting HTTP server
-	go func() {
-		log.Printf("Staring HTTP service on %s ...", addr)
-
-		if err := http.ListenAndServe(addr, nil); err != nil {
-			errs <- err
-		}
-
-	}()
-
-	// Starting HTTPS server
-	go func() {
-		log.Printf("Staring HTTPS service on %s ...", sslAddr)
-		if err := http.ListenAndServeTLS(sslAddr, ssl["cert"], ssl["key"], nil); err != nil {
-			errs <- err
-		}
-	}()
-
-	return errs
-}
-
 func main() {
+	// Call OS detection configuration
+	// Detectos()
+	// Calling homepage configuration
+	homepage.HomePageConf()
 
-	http.HandleFunc("/", homePage)
+	// Calling Nginx configuration.
+	nginx.NginxConf()
 
-	errs := Run(":8080", ":10443", map[string]string{
-		"cert": "localhost.crt",
-		"key":  "localhost.key",
+	// Calling Varnish configuration.
+	varnish.VarnishConf()
+
+	// Calling Openrest configuration.
+	openresty.OpenrestyConf()
+
+	errs := webserver.Run(":8080", ":10443", map[string]string{
+		"cert": "./webserver/localhost.crt",
+		"key":  "./webserver/localhost.key",
 	})
 
 	// This will run forever until channel receives error
@@ -71,5 +34,4 @@ func main() {
 	case err := <-errs:
 		log.Printf("Error starting server (error: %s)", err)
 	}
-
 }
