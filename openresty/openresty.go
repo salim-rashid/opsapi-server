@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"strings"
 	"os/exec"
-	"encoding/json"
+	//"encoding/json"
 )
 
 func OpenrestyConf() {
@@ -20,20 +20,10 @@ func OpenrestyConf() {
 	http.HandleFunc("/v1/openresty_restart", openrestyRestart)
 	http.HandleFunc("/v1/openresty_reload", openrestyReload)
 
-	// http.HandleFunc("/v1/openresty_uninstall", OpenrestyUninstall)
-
-	// http.HandleFunc("/v1/openresty_update", OpenrestyUpdate)
-
-	// http.HandleFunc("/v1/openresty_start", OpenrestyStart)
 }
 
-// type Openresty struct {
-// 	Name    string `json:"name"`
-// 	Version int    `json:"version"`
-// }
 
 func openrestyInstall(w http.ResponseWriter, r *http.Request) {
-	// fmt.Fprintf(w, "Do Openresty installation.")
 
 	// Detect OS
 	o := runtime.GOOS
@@ -94,7 +84,7 @@ func DetectLinuxDist(w http.ResponseWriter, r *http.Request, o string) {
 	}
 }
 
- func InstallOpenresty (w http.ResponseWriter, r *http.Request, distro string) {
+func InstallOpenresty (w http.ResponseWriter, r *http.Request, distro string) {
  	switch distro {
  	case "Ubuntu":
  		//fmt.Fprintf(w, `{"Install Openresty on %v Linux......\n"}`, distro)
@@ -115,7 +105,7 @@ func DetectLinuxDist(w http.ResponseWriter, r *http.Request, o string) {
  	}
  }
 
- func deployOpenresty (w http.ResponseWriter, r *http.Request) {
+func deployOpenresty (w http.ResponseWriter, r *http.Request) {
 
  	//output, err := exec.Command("openresty", "-v").CombinedOutput()
  	_, err := exec.Command("openresty", "-v").CombinedOutput()
@@ -154,164 +144,8 @@ func DetectLinuxDist(w http.ResponseWriter, r *http.Request, o string) {
  	//fmt.Printf("%s", out)
  	////return
 
- }
-
- type Application struct {
- 	Name    string `json:"name"`
- 	Version string `json:"version"`
- }
-
- // func OpenrestyUninstall(w http.ResponseWriter, r *http.Request) {
- //      fmt.Fprintf(w, "Do Openresty uninstallation.")
- // }
-
- func openrestyVersion (w http.ResponseWriter, r *http.Request) {
- 	output, err := exec.Command("openresty", "-v").CombinedOutput()
- 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
- 		//fmt.Println("OpenResty is not installed")
-		fmt.Fprintf(w, `{"OpenResty is not installed"}`)
- 		return
- 	}
-
- 	versionOutput := strings.Split(string(output), " ")
- 	version := strings.TrimSpace(versionOutput[2])
- 	custom_versionOutput := strings.Split(string(version), "/")
- 	custom_version := strings.TrimSpace(custom_versionOutput[1])
-
- 	app := Application{
- 		Name:    "OpenResty",
- 		Version: custom_version,
- 	}
-
- 	appJSON, err := json.Marshal(app)
- 	if err != nil {
- 		//fmt.Println("Error marshaling JSON:", err)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, `{"Error marshaling JSON:"}`, err)
- 		return
- 	}
-
- 	//fmt.Println(string(appJSON))
- 	//fmt.Printf(string(appJSON))
-	//fmt.Fprintf(w, string(appJSON))
-        fmt.Fprintf(w, `{"status": 200, "response": %s"}`, string(appJSON))
- }
-
-
-func openrestyStatus(w http.ResponseWriter, r *http.Request) {
-        //out, err := exec.Command("systemctl", "status", "openresty").CombinedOutput()
-        out, _ := exec.Command("systemctl", "status", "openresty").CombinedOutput()
-        //if err != nil {
-        //      fmt.Fprintf(w, `{"status": 500, "response": "Failed to check Openresty status"}`)
-        //      return
-        //}
-        outStr := string(out)
-        lines := strings.Split(outStr, "\n")
-        for _, line := range lines {
-                if strings.Contains(line, "inactive") {
-                        w.WriteHeader(http.StatusOK)
-                        splitLine := strings.Split(string(line), ":")
-                        output := strings.TrimSpace(splitLine[1])
-                        splitOutput := strings.Split(string(output), " ")
-                        state := strings.TrimSpace(splitOutput[0])
-                        //fmt.Fprintf(w, `{"%s"}`, state)
-                        //fmt.Fprintf(w, `{"%s"}`, output)
-                        if strings.Contains(state, "inactive") {
-                               //fmt.Fprintf(w, `{"status": 200, "response": "Openresty is not running", "healthcheck": "stopped"}`)
-                               fmt.Fprintf(w, `{"status": 200, "response": %v, "healthcheck": "stopped"}`, output)
-                        }//else {
-                        //      fmt.Fprintf(w, `{"status": 200, "response": "Openresty is not running", "healthcheck": "inactive"}`)
-                        //}
-                        break
-                }
-
-                //if strings.HasPrefix(line, "     Active:") {
-                if strings.Contains(line, "active") {
-                        w.WriteHeader(http.StatusOK)
-                        splitOutput := strings.Split(string(line), ":")
-                        output := strings.TrimSpace(splitOutput[1])
-                        if strings.Contains(output, "active") {
-                                //fmt.Fprintf(w, `{"status": 200, "response": "Openresty is running", "healthcheck": "active"}`)
-                                fmt.Fprintf(w, `{"status": 200, "response": %v, "healthcheck": "active"}`, output)
-                        }
-                        break
-                }
-       }
 }
 
-func openrestyStart (w http.ResponseWriter, r *http.Request) {
-        err := exec.Command("sudo", "systemctl", "start", "openresty").Run()
-	if err != nil {
-                //fmt.Println("Error starting OpenResty:", err)
-               fmt.Fprintf(w, `{"Error starting OpenResty:"}`,err)
-        } else {
-                //fmt.Println("OpenResty started successfully")
-               fmt.Fprintf(w, `{"status"; 200, response: "Started OK" , "healthcheck": "active"}`)
-        }
-        ////fmt.Printf("%s\n", out)
-        ////fmt.Fprintf(w, `{"status": 200, "response": "%s\n"}`, out)
-        //fmt.Fprintf(w, `{"status": 200, "response": "Starting Openrest installation....."}`)
-}
-
-func openrestyStop (w http.ResponseWriter, r *http.Request) {
-        err := exec.Command("sudo", "systemctl", "stop", "openresty").Run()
-        if err != nil {
-                //fmt.Println("Error starting OpenResty:", err)
-               fmt.Fprintf(w, `{"Error stopping OpenResty:"}`,err)
-        } else {
-                //fmt.Println("OpenResty started successfully")
-               fmt.Fprintf(w, `{"status"; 200, response: "Stopped OK" , "healthcheck": "stopped"}`)
-        }
-        ////fmt.Printf("%s\n", out)
-        ////fmt.Fprintf(w, `{"status": 200, "response": "%s\n"}`, out)
-        //fmt.Fprintf(w, `{"status": 200, "response": "Starting Openrest installation....."}`)
-}
-
-func openrestyRestart (w http.ResponseWriter, r *http.Request) {
-        err := exec.Command("sudo", "systemctl", "restart", "openresty").Run()
-        if err != nil {
-                //fmt.Println("Error starting OpenResty:", err)
-               fmt.Fprintf(w, `{"Error restrting OpenResty:"}`,err)
-        } else {
-                //fmt.Println("OpenResty started successfully")
-               fmt.Fprintf(w, `{"status"; 200, response: "Restarted OK" , "healthcheck": "active"}`)
-        }
-        ////fmt.Printf("%s\n", out)
-        ////fmt.Fprintf(w, `{"status": 200, "response": "%s\n"}`, out)
-        //fmt.Fprintf(w, `{"status": 200, "response": "Starting Openrest installation....."}`)
-}
-
-func openrestyReload (w http.ResponseWriter, r *http.Request) {
-        err := exec.Command("sudo", "systemctl", "reload", "openresty").Run()
-        if err != nil {
-                //fmt.Println("Error starting OpenResty:", err)
-               fmt.Fprintf(w, `{"Error reloading OpenResty:"}`,err)
-        } else {
-                //fmt.Println("OpenResty started successfully")
-               fmt.Fprintf(w, `{"status"; 200, response: "Reloaded OK" , "healthcheck": "active"}`)
-        }
-        ////fmt.Printf("%s\n", out)
-        ////fmt.Fprintf(w, `{"status": 200, "response": "%s\n"}`, out)
-        //fmt.Fprintf(w, `{"status": 200, "response": "Starting Openrest installation....."}`)
-}
-
-//func main() {
-//        err := exec.Command("sudo", "systemctl", "start", "openresty").Run()
-//        //if err != nil {
-//        //      return err
-//        //}
-//
-//        //return nil
-//        if err != nil {
-//                fmt.Println("Error starting OpenResty:", err)
-//        } else {
-//                fmt.Println("OpenResty started successfully")
-//        }
-
-
-
-//}
 
 // // func OpenrestyUninstall(w http.ResponseWriter, r *http.Request) {
 // // 	fmt.Fprintf(w, "Do Openresty uninstallation.")
