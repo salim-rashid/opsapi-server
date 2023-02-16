@@ -94,7 +94,7 @@ func convertFileOutputtoJson(w http.ResponseWriter, r *http.Request, filename st
 }
 
 func openrestyconfFetch(w http.ResponseWriter, r *http.Request) {
-	filename := "/tmp/output"
+	filename := "./output"
 	saveOpenrestyConfigToFile(w, r, filename)
 
 }
