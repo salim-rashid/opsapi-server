@@ -19,6 +19,8 @@ func OpenrestyConf() {
 	http.HandleFunc("/v1/openresty_stop", openrestyStop)
 	http.HandleFunc("/v1/openresty_restart", openrestyRestart)
 	http.HandleFunc("/v1/openresty_reload", openrestyReload)
+	//http.HandleFunc("/v1/openresty_config_test", openrestyconfTest)
+	http.HandleFunc("/v1/openresty_config_fetch", openrestyconfFetch)
 
 }
 
@@ -145,6 +147,8 @@ func deployOpenresty (w http.ResponseWriter, r *http.Request) {
  	////return
 
 }
+
+
 
 
 // // func OpenrestyUninstall(w http.ResponseWriter, r *http.Request) {
