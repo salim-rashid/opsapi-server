@@ -7,20 +7,15 @@ import (
     "net/http"
 )
 
-//type OpenrestyResult struct {
-//    Status 	   string `json:"status"`
-//    SyntaxStatus   string `json:"syntax_status"`
-//    TestStatus     string `json:"test_status"`
-//    //ConfigFilePath string `json:"config_file_path"`
-//}
+type OpenrestyResult struct {
+    Status 	   string `json:"status"`
+    SyntaxStatus   string `json:"syntax_status"`
+    TestStatus     string `json:"test_status"`
+    //ConfigFilePath string `json:"config_file_path"`
+}
 
-func openrestyconfTest (w http.ResponseWriter, r *http.Request) {
+func openrestyconfTest(w http.ResponseWriter, r *http.Request) {
 
-    type OpenrestyResult struct {
-        Status         string `json:"status"`
-        SyntaxStatus   string `json:"syntax_status"`
-        TestStatus     string `json:"test_status"`
-        //ConfigFilePath string `json:"config_file_path"`
     }
 
     out, err := exec.Command("sudo", "openresty", "-t").CombinedOutput()
