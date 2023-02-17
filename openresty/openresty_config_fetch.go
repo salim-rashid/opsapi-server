@@ -90,7 +90,8 @@ func convertFileOutputtoJson(w http.ResponseWriter, r *http.Request, filename st
     }
 
     //fmt.Println(string(jsonResult))
-    fmt.Fprintln(w, `{%v}`, string(jsonResult))
+    //fmt.Fprintln(w, `{%v}`, string(jsonResult))
+    fmt.Fprintln(w, string(jsonResult))
 }
 
 func openrestyconfFetch(w http.ResponseWriter, r *http.Request) {
