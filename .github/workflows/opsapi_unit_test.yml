@@ -25,7 +25,7 @@ jobs:
       run: go build -o opsapi main.go
 
     - name: Run opsapi executable
-      run: ./myapp &
+      run: ./opsapi &
 
     - name: Browse opsapi homepage
       run: curl localhost:8080/
